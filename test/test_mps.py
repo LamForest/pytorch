@@ -179,9 +179,6 @@ def mps_ops_grad_modifier(ops):
         'nn.functional.conv_transpose1d': [torch.float16],
         'nn.functional.conv_transpose2d': [torch.float16],
         'nn.functional.conv_transpose3d': [torch.float16],
-        # Segfaults
-        'all': [torch.float16, torch.float32],
-        'any': [torch.float16, torch.float32],
     }
 
     MACOS_13_3_XFAILLIST_GRAD = {
@@ -464,7 +461,7 @@ def mps_ops_modifier(ops):
         # CPU Error: cpu not giving nan for x/0.0
         'atan2': [torch.bool, torch.int16, torch.int32, torch.int64, torch.uint8, torch.int8],
 
-        # test blow pass on macOS 12 as it falls back to cpu
+        # test blow pass on macOS 12 as it falls back to cpuAA
         # Argsort case using duplicate indices (undefined behaviour):
         #  - CPU output: tensor([2546, 6917, 3181,  ..., 7128, 5133,   30], devuce='cpu')
         #  - MPS output: tensor([2546, 6917, 3181,  ..., 7128,   30, 5133], device='mps:0')
@@ -862,8 +859,6 @@ def mps_ops_modifier(ops):
     }
 
     SKIPLIST = {
-        'all': None,
-        'any': None,
         # Unsupported
         # input types 'tensor<1x3x9x9xf16>' and 'tensor<1xf32>' are not broadcast compatible
         'nn.functional.avg_pool2d': [torch.float16],
